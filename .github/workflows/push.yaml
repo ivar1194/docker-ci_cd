@@ -1,0 +1,20 @@
+name: deploy
+on: push
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      #esta accion en particular se encarga de descargar nuestro repo en el runner de github
+      - uses: actions/checkout@v2
+      - name: Build and push to Docker
+      #esta action viene del repositorio llamado docker y contiene todos los comandos para pushear una imagen en docker
+        uses: docker/build-push-action@v1
+      #con el with lo que hacemos es pasarle las opciones especificas o los parametros para usar esa accion
+        with:
+           username: ${{ secrets.DOCKER_USERNAME }}
+           password: ${{ secrets.DOCKER_PASSWORD }}
+           repository: ${{ arruaim/python }}
+           tag_with:ref: true
+           tag_with:sha: true
+           tags: ${{ github.sha }}   
+      
